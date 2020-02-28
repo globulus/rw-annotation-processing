@@ -42,7 +42,7 @@ class AdapterCodeBuilder(private val adapterName: String, private val data: Mode
 
   private val viewHolderName = "ViewHolder"
   private val viewHolderClassName = ClassName(data.packageName, viewHolderName)
-  private val viewHolderQualitifedClassName = ClassName(data.packageName, "$adapterName.$viewHolderName")
+  private val viewHolderQualifiedClassName = ClassName(data.packageName, "$adapterName.$viewHolderName")
   private val modelClassName = ClassName(data.packageName, data.modelName)
   private val itemsListClassName = ClassName("kotlin.collections", "List")
       .parameterizedBy(modelClassName)
@@ -54,7 +54,7 @@ class AdapterCodeBuilder(private val adapterName: String, private val data: Mode
           .build()
       )
       .superclass(ClassName("androidx.recyclerview.widget.RecyclerView", "Adapter")
-          .parameterizedBy(viewHolderQualitifedClassName)
+          .parameterizedBy(viewHolderQualifiedClassName)
       )
       .addProperty(PropertySpec.builder("items", itemsListClassName)
           .addModifiers(KModifier.PRIVATE)
@@ -77,7 +77,7 @@ class AdapterCodeBuilder(private val adapterName: String, private val data: Mode
         .addModifiers(KModifier.OVERRIDE)
         .addParameter("parent", ClassName("android.view", "ViewGroup"))
         .addParameter("viewType", INT)
-        .returns(viewHolderQualitifedClassName)
+        .returns(viewHolderQualifiedClassName)
         .addStatement("val view = android.view.LayoutInflater.from(parent.context).inflate(%L, " +
             "parent, false)", data.layoutId)
         .addStatement("return $viewHolderName(view)")
@@ -86,7 +86,7 @@ class AdapterCodeBuilder(private val adapterName: String, private val data: Mode
 
     addFunction(FunSpec.builder("onBindViewHolder")
         .addModifiers(KModifier.OVERRIDE)
-        .addParameter("viewHolder", viewHolderQualitifedClassName)
+        .addParameter("viewHolder", viewHolderQualifiedClassName)
         .addParameter("position", INT)
         .addStatement("viewHolder.bind(items[position])")
         .build()
